@@ -1,0 +1,180 @@
+﻿@using AdminPanel.Domain.Entities
+@model AdminPanel.Domain.Entities.User
+
+@{
+    ViewData["Title"] = "Пользователь";
+}
+
+<div class="central">
+    <form method="post" asp-action="Edit" asp-controller="Users" asp-route-id="@Model.Id" asp-antiforgery="true" id="editForm" 
+          class="callout text-center central">
+        <div class="users">
+            <h2> @(@Model.IsNew() ? "Новый пользователь" : "Редактирование") </h2>
+            <div class="validation" asp-validation-summary="All"></div>
+            <div class="floated-label-wrapper">
+                <input type="text" id="inputName" name="Name" value="@Model.Name" placeholder="Имя">
+            </div>
+            <div class="floated-label-wrapper">
+                <input type="number" id="inputAge" name="Age" value="@Model.Age" placeholder="Возраст">
+            </div>
+            <div class="floated-label-wrapper">
+                <input type="text" id="inputCity" name="City" value="@Model.City" placeholder="Город">
+            </div>
+            <div class="floated-label-wrapper">
+                <input type="text" id="inputPhone" name="Phone" value="@Model.Phone" placeholder="Телефон">
+            <div class="mb-3 row">
+                <div class="col-sm-12">
+                    <select class="form-select form-select-md" name="RoleId">
+                        @foreach (Role role in ViewBag.Roles)
+                        {
+                            <option selected=@(Model.RoleId == role.Id ? true : null) value="@role.Id">@role.Name</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <div class="col-sm-12">
+                    <select multiple name="ProjectsId" class="form-select form-select-md" size="3">
+                        @foreach (Project project in ViewBag.Projects)
+                        {
+                            <option selected=@(Model.ProjectsId.Contains(project.Id) ? true : null) value="@project.Id">@project.Name</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="floated-label-wrapper">
+                <input type="text" id="inputEmail" name="Email" value="@Model.Email" placeholder="Email">
+                </div>
+            <div class="floated-label-wrapper">
+                <input type="text" id="inputNote" name="Note" value="@Model.Note" placeholder="Заметки">
+            </div>
+            </div>
+                <input type="hidden"  id="Id" name="Id" value="@Model.Id">
+                <input type="hidden"  id="DateCreated" name="DateCreated" value="@Model.DateCreated">
+                <input type="hidden"  id="DateUpdated" name="DateUpdated" value="@Model.DateUpdated">
+                <input type="hidden"  id="inputPassword" name="Password" value="@Model.Password">
+                <!--TODO-->
+                <input type="hidden" id="ImageId" name="ImageId" value="@Model.ImageId" />
+                <div>
+                <div class="">
+                    <button type="submit" class="button expanded" >Сохранить</button>
+                </div>
+                <div class="">
+                    <a id="hlnkDelete" href='javascript:delete(@Model.Id)' data-id='@Model.Id' title="delete" class="alert button expanded  btnDelete">Удалить</a>
+                </div>
+                <div class="">
+                    <a type="reset" class="button secondary expanded" href="/Users">Отмена</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+                    $("#editForm").validate({
+                        rules: {
+                            Name: {
+                                required: true,
+                                minlength: 2,
+                                maxlength: 36
+                            },
+                            Age: {
+                                required: true,
+                                digits: true,
+                                minlength: 1,
+                                maxlength: 3
+                            },
+                            City: {
+                                required: true,
+                                minlength: 1,
+                                maxlength: 100
+                            },
+                            Phone: {
+                                required: true,
+                                minlength: 1,
+                                maxlength: 25
+                            },
+                            RoleId: {
+                                required: true,
+                                minlength: 1,
+                                maxlength: 36
+                            },
+                            Email: {
+                                required: true,
+                                minlength: 1,
+                                email: true,
+                                maxlength: 100,
+                                remote: {
+                                    url: '@Url.RouteUrl(new { controller = "Users", action = "CheckExistingEmail" })',
+                                    type: "post",
+                                    dataType: 'json',
+                                    data: {
+                                        id: function () {
+                                            return $("#Id").val();
+                                        },
+                                        inputEmail: function () {
+                                            return $("#inputEmail").val();
+                                        }
+                                    }
+                                }   
+                            },
+                            Note: {
+                                minlength: 1,
+                                maxlength: 100
+                            },
+                            Password: {
+                                required: true,
+                                minlength: 8,
+                                maxlength: 36
+                            },
+                            ProjectsId: {
+                                required: true
+                            }
+                        }
+                    });
+                });
+        $(document).on("click",
+                ".btnDelete",
+                function() {
+                    var currentId = @Model.Id;
+                    Swal.fire({
+                    title: 'Вы уверены?',
+                    text: "Вы не сможете отменить это!",
+                    icon: 'warning',
+                    showCancelButton: true, 
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Да, удалить!',
+                    cancelButtonText: 'Назад'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Удалено!',
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                            $.ajax({
+                                type: "DELETE",
+                                url: '@Url.Action("Delete")',
+                                data: { id: currentId },
+                                success: function() {
+                                    location.href = '/Users';
+                                },
+                                error: function() {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Упс, произошла ошибка!',
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    });
+                                }
+                            });
+                        }
+                    });
+                });
+    </script>
+    <script type="text/javascript">AdminPanel.Authentication()</script>
+}

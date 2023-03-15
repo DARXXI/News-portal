@@ -1,0 +1,204 @@
+﻿@{
+    ViewData["Title"] = "Пользователи";
+}
+
+@model AdminPanel.Domain.Entities.User[]
+
+<div class="outer-div">
+    <div class="title">
+        <h1>Список всех пользователей</h1>
+    </div>
+    <div class="buttons-bar">
+        <a class="btn btn-primary" href=@Url.RouteUrl(new {Controller = "Users", Action = "Edit"})>Добавить</a>
+    </div>
+</div>
+<div id="myGrid" class="ag-theme-alpine" style="height: calc(100vh - 250px)"></div>
+<script src="~/lib/moment/moment-with-locales.min.js"></script>
+<script src="~/lib/agGrid/agGrid-locale/locale.ru.js"></script>
+<script src="~/lib/agGrid/agGrid-bones/ag-grid-enterprise.min.js"></script>
+<script src="~/lib/agGrid/agGrid-bones/agGrid-bones.js"></script>
+<script type="text/javascript">
+    function actionCellRenderer(params) {
+        let eGui = document.createElement("div");
+
+        let editingCells = params.api.getEditingCells();
+        // checks if the rowIndex matches in at least one of the editing cells
+        let isCurrentRowEditing = editingCells.some((cell) => {
+            return cell.rowIndex === params.node.rowIndex;
+        });
+
+        if (isCurrentRowEditing) {
+            eGui.innerHTML = `
+                <button
+                  class="action-button update"
+                  data-action="update">
+                       update
+                </button>
+                <button
+                  class="action-button cancel"
+                  data-action="cancel">
+                       cancel
+                </button>
+                `;
+        } else {
+            eGui.innerHTML = `
+                <button
+                  class="action-button edit"
+                  data-action="edit">
+                     edit
+                  </button>
+                <button
+                      class="action-button delete btnDelete"
+                  data-action="delete">
+                     delete
+                </button>
+                `;
+        }
+
+        return eGui;
+    };
+
+
+    var gridOptions = {
+        suppressClickEdit: true,
+        onCellClicked(params) {
+            // Handle click event for action cells
+            if (params.column.colId === "action" && params.event.target.dataset.action) {
+                let action = params.event.target.dataset.action;
+
+                if (action === "edit") {
+                    location.href = '/users/edit?id=' + params.data.id;
+                }
+
+                if (action === "delete") {
+                    var currentId = params.data.id;
+                    Swal.fire({
+                        title: 'Вы уверены?',
+                        text: "Вы не сможете отменить это!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Да, удалить!',
+                        cancelButtonText: 'Назад'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Удалено!',
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                            $.ajax({
+                                type: "DELETE",
+                                url: '@Url.Action("Delete")',
+                                data: { id: currentId },
+                                success: function() {
+                                    location.href = '/Users';
+                                },
+                                error: function() {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Упс, произошла ошибка!',
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    });
+                                }
+                            });
+                        }
+                    });
+                }
+
+                if (action === "update") {
+                    params.api.stopEditing(false);
+                }
+
+                if (action === "cancel") {
+                    params.api.stopEditing(true);
+                }
+            }
+        },
+        onRowEditingStarted: (params) => {
+            params.api.refreshCells({
+                columns: ["action"],
+                rowNodes: [params.node],
+                force: true
+            });
+        },
+        onRowEditingStopped: (params) => {
+            params.api.refreshCells({
+                columns: ["action"],
+                rowNodes: [params.node],
+                force: true
+            });
+        },
+        editType: "fullRow",
+        columnDefs: [
+            { headerName: 'Имя', field: "name", sort: "Desc" }, 
+            { headerName: 'Почта', field: "email" }, 
+            //{ headerName: 'Пароль', field: "password" },
+            { headerName: 'Возраст', field: "age" }, 
+            { headerName: 'Город', field: "city" }, 
+            { headerName: 'Заметки', field: "note" }, 
+            { headerName: 'Роль', field: "role.name" }, 
+            { headerName: 'Проекты', field: "projectsNames", sortable:false },
+            { headerName: 'Дата создания', field: "dateCreated", valueGetter: (params)=>{return AdminPanel.Utils.dateFormatter(params.data.dateCreated)}},
+            { headerName: 'Дата обновления', field: "dateUpdated", valueGetter: (params)=>{return AdminPanel.Utils.dateFormatter(params.data.dateUpdated)}},
+
+            {
+                headerName: "Управление",
+                minWidth: 150,
+                cellRenderer: actionCellRenderer,
+                editable: false,
+                resizable: false,
+                colId: "action"
+            }
+        ],
+        defaultColDef: {
+            flex: 1,
+            minWidth: 120,
+            resizable: true,
+            sortable: true,
+            editable: true
+        },
+
+        rowModelType: 'serverSide',
+        serverSideInfiniteScroll: true,
+
+        pagination: true,
+        // 10 rows per page (default is 100)
+        paginationPageSize: 10,
+        // fetch 10 rows per block as page size is 10 (default is 100)
+        cacheBlockSize: 10,
+
+        animateRows: true,
+
+        onCellDoubleClicked: function (params) {
+            console.log(params);
+            location.href = '/users/edit?id=' + params.data.id;
+        },
+    };
+
+    var localeText = AG_GRID_LOCALE_RU;
+    gridInit('@Url.RouteUrl(new { controller = "Users", action = "GetData" })', 'myGrid');
+
+    //function addDeleteAtt() {
+    //    var anchors = document.getElementsByClassName("delete");
+    //            Array.prototype.forEach.call(anchors,
+    //                function(array) {
+    //                    debugger;
+    //                    array.classList.add('btnDelete');
+    //                });
+    //}
+
+    //if (document.readyState === "loading") {
+    //    document.addEventListener("DOMContentLoaded", addDeleteAtt);
+    //    debugger;
+    //}
+    //else {
+    //    addDeleteAtt();
+    //    debugger;
+    //}
+
+</script>
+

@@ -1,0 +1,70 @@
+﻿@using AdminPanel.Domain.Entities
+@using Microsoft.AspNetCore.Authorization
+@model AdminPanel.Domain.Entities.Image
+@inject IAuthorizationService AuthorizationService
+
+@{
+
+}
+<link rel="stylesheet" href="~/lib/dropzone/dropzone.min.css">
+<link rel="stylesheet" href="~/css/Profile/Profile.css">
+
+<div class="container rounded bg-white border border-secondary mt-5">
+    <div class="row">
+        @ViewBag.propertyInfo
+        <div class="col-md-4 border-right">
+            <div class="d-flex flex-column align-items-center text-center p-3 py-5 ">
+                <div class="profile-circle">
+                    <form width="90px" id="imageUploading" asp-action="Upload" asp-controller="Profile" method="post" enctype="multipart/form-data"
+                          data-pasley-validate class="dropzone rounded-circle">
+
+                    </form>
+                </div>
+                <span class="font-weight-bold">@ViewBag.Name</span>
+                <span class="text-black-50">@ViewBag.Email</span>
+                <span>@ViewBag.City</span>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="p-3 py-5">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="d-flex flex-row align-items-center back ">
+                        <h6 class="text-secondary"> Назад</h6>
+                    </div>
+                    <h6 class="text-right text-secondary">Редатирование профиля</h6>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-md-6"><input type="text" class="form-control" placeholder="@ViewBag.User.Name" value="@ViewBag.User.Name"></div>
+                    <div class="col-md-6"><input type="text" class="form-control" value="@ViewBag.User.Email" placeholder="@ViewBag.User.Email"></div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-6"><input type="text" class="form-control" placeholder="@ViewBag.User.Role" value="@ViewBag.User.Role"></div>
+                    <div class="col-md-6"><input type="text" class="form-control" value="@ViewBag.User.Phone" placeholder="@ViewBag.User.Phone"></div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-6"><input type="text" class="form-control" placeholder="@ViewBag.User.City" value="@ViewBag.User.City"></div>
+                    <div class="col-md-6"><input type="text" class="form-control" value="@ViewBag.User.Age" placeholder="@ViewBag.User.Age"></div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-6"><input type="text" class="form-control" placeholder="@ViewBag.User.ProjectsNames" value="@ViewBag.User.ProjectsNames"></div>
+                    <div class="col-md-6"><input type="text" class="form-control" value="@ViewBag.Note" placeholder="@ViewBag.Note"></div>
+                </div>
+                <div class="mt-5 text-right"><button class="btn btn-primary profile-button" type="submit">Save Profile</button></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="lib/dropzone/dropzone.min.js"></script>
+<script>
+    Dropzone.options.imageUploading = {
+        dictDefaultMessage: "Выбрать файл",
+        maxFilesize: 10, 
+        acceptedFiles: "image/*",
+        maxFiles: 1,
+        //addRemoveLinks: true,
+        parallelUploads: 1,
+        uploadMultiple: false,
+    };
+</script>

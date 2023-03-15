@@ -1,0 +1,26 @@
+﻿@using AdminPanel.Domain.Entities
+@model AdminPanel.Domain.Entities.News[]
+@{
+    ViewData["Title"] = "Новости";
+}
+<div class="outer-div">
+    <div class="title">
+        <h1>Новости</h1>
+    </div>
+    <div class="buttons-bar">
+        <!--TODO path via tag helper -->
+        <a class="btn btn-primary" href="/news/edit/">Добавить</a>
+    </div>
+</div>
+
+@foreach (News news in ViewBag.News)
+{
+    <div class="p-4 p-md-5 mb-4 rounded text-bg-dark">
+        <div class=""></div>
+        <div class="col-md-6 px-0">
+            <h1 class="display-4 fst-italic">@Html.Raw(@news.Title)</h1>
+            <p class="lead my-3">@Html.Raw(@news.Content)</p>
+            <p class="lead mb-0"><a href="#" class="text-white fw-bold">Continue reading...</a></p>
+        </div>
+    </div>
+}

@@ -1,0 +1,79 @@
+﻿@using AdminPanel.Domain.Entities
+@model AdminPanel.Domain.Entities.Register
+@{
+    ViewData["Title"] = "Регистрация";
+}
+
+<div class="central">
+    <form method="post" asp-controller="Account" asp-action="Register" asp-antiforgery="true" id="editForm" class="callout text-center central" autoComplete="off">
+        <h2>Регистрация</h2>
+        <div asp-validation-summary = "All"></div>
+        <div class="floated-label-wrapper">
+            <input type="text" id="inputName" name="Name" value="@Model.Name" placeholder="Имя">
+        </div>
+        <div class="floated-label-wrapper">
+            <input type="text" id="inputEmail" name="Email" value="@Model.Email" placeholder="Email" autocomplete="off">
+        </div>
+        <div class="floated-label-wrapper">
+            <input type="password" id="inputPassword" name="Password" value="@Model.Password" placeholder="Пароль" autocomplete="new-password">
+        </div>
+        <div class="floated-label-wrapper">
+            <input type="password" id="inputConfirmedPassword" name="ConfirmedPassword" value="@Model.ConfirmedPassword" autocomplete="new-password" 
+                   placeholder="Повторите пароль"/>
+        </div>
+        <input type="number" class="form-control" id="Id" value="@Model.Id" hidden>
+        <div>
+            <button type="submit" class="button expanded">Сохранить</button>
+        </div>
+        <p class="form-registration-member-signin">Есть аккаунт? <a href="@Url.RouteUrl(new {Controller="Account", action="Login"})">Войти</a></p>
+    </form>
+</div>
+
+@section Scripts
+{
+    <script>
+        $(document).ready(function() {
+            $("#editForm").validate({
+                rules: {
+                    Name: {
+                        required: true,
+                        minlength: 2,
+                        maxlength: 36
+                    },
+                    Email: {
+                        required: true,
+                        minlength: 1,
+                        email: true,
+                        maxlength: 100,
+                        remote: {
+                            url: '@Url.RouteUrl(new { controller = "Users", action = "CheckExistingEmail" })',
+                            type: "post",
+                            dataType: 'json',
+                            data: {
+                                id: function() {
+                                    return $("#Id").val();
+                                },
+                                inputEmail: function() {
+                                    return $("#inputEmail").val();
+                                }
+                            }
+                        }
+                    },
+                    Password: {
+                        required: true,
+                        minlength: 6,
+                        maxlength: 36
+                    },
+                    ConfirmedPassword :
+                    {
+                        required: true,
+                        equalTo: "#inputPassword",
+                        minlength: 6,
+                        maxlength: 36
+                    }
+                }
+            });
+        });
+    </script>
+    <script type="~/text/javascript">AdminPanel.Authentication()</script>
+}

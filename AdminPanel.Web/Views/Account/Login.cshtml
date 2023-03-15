@@ -1,0 +1,33 @@
+﻿@using AdminPanel.Domain.Entities
+@model AdminPanel.Domain.Entities.Login
+@{
+    ViewData["Title"] = "Вход";
+}
+
+<div class="central">
+    <form method="post" asp-controller="Account" asp-action="Login" asp-antiforgery="true" id="editForm" class="callout text-center central" autoComplete="off">
+        <h2>Вход</h2>
+        <div asp-validation-summary="All"></div>
+        <div class="floated-label-wrapper">
+            <input type="text" id="inputEmail" name="Email" value="@Model.Email" placeholder="Email" autoComplete="off">
+        </div>
+        <div class="floated-label-wrapper">
+            <input type="password" id="inputPassword" name="Password" value="@Model.Password" placeholder="Пароль" autocomplete="new-password">
+        </div>
+        <input type="number" id="Id" value="@Model.Id" hidden>
+        <div>
+            <button type="submit" class="button expanded btnLogin">Войти</button>
+        </div>
+
+        @if (ViewBag.LoginError != null)
+        {
+            <p class="form-registration-member-signin red">@ViewBag.LoginError</p>
+        }
+        <p class="form-registration-member-signin">Нет аккаунта?  <a href="@Url.RouteUrl(new {Controller="Account", action="Register"})">Регистрация</a></p>
+    </form>
+</div>
+
+@section Scripts
+{
+    <script>AdminPanel.Validation.login()</script>
+}
