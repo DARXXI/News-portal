@@ -6,6 +6,7 @@ using AdminPanel.Web.Controllers.Base;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Telegram.Bot;
+using AdminPanel.TelegramBot;
 
 namespace AdminPanel.Web.Controllers
 {
@@ -14,17 +15,11 @@ namespace AdminPanel.Web.Controllers
     {
         private readonly IChatRepository<Message> _chatRepository;
         private readonly IUserRepository _userRepository;
-        ITelegramBotClient botClient;
-
-
 
         public ChatController(IChatRepository<Message> chatRepository, IUserRepository userRepository)
         {
             _chatRepository = chatRepository;
             _userRepository = userRepository;
-            //ITelegramBotClient botClient;
-
-
         }
 
         [HttpGet]
@@ -40,10 +35,10 @@ namespace AdminPanel.Web.Controllers
             if (ModelState.IsValid)
             {
                 await _chatRepository.UpdateAsync(message, UserId, cancellationToken);
-            }
-            var mes = _chatRepository.GetAllMessages().Last();
-            await TelegramBot.SendMessageAsync(cancellationToken, mes);
 
+                var mes = _chatRepository.GetAllMessages().Last();
+                await AdminPanel.TelegramBot.TelegramBot.SendMessageAsync(cancellationToken, mes);
+            }
             return Ok();
         }
     }

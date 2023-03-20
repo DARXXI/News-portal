@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Telegram.Bot" Version="18.0.0" />
+    <PackageReference Include="Telegram.Bots.Extensions.Polling" Version="5.9.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AdminPanel.Console\AdminPanel.Console.csproj" />
+    <ProjectReference Include="..\AdminPanel.Domain\AdminPanel.Domain.csproj" />
+    <ProjectReference Include="..\AdminPanel.Repository\AdminPanel.Repository.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -7,20 +7,16 @@
 @inject IAuthorizationService AuthorizationService
 
 <form method="post" asp-action="Message" asp-controller="Chat" asp-route-id="@Model.Id" asp-antiforgery="true" id="editForm">
-    <section style="flex-grow:1;" class="chat">
+    <section class="chat">
         <div class="container py-5">
             <div class="row d-flex justify-content-center">
                 <div class="col-md-10 col-lg-8 col-xl-6">
 
                     <div class="card" id="chat2">
                         <div class="card-header d-flex justify-content-between align-items-center p-3">
-                            <h5 class="mb-0">Chat</h5>
-                            <button type="button" class="btn btn-primary btn-sm" data-mdb-ripple-color="dark">
-                                Let's Chat
-                                App
-                            </button>
+                            <h5 class="mb-0">Общий чат</h5>
                         </div>
-                        <div class="card-body" id="card-body" data-mdb-perfect-scrollbar="true" style="position: relative; height: 400px; overflow: auto">
+                        <div class="card-body" id="card-body" data-mdb-perfect-scrollbar="true" style="position: relative; height: 380px; overflow: auto">
 
                             <div class="d-flex flex-row justify-content-start">
                                 <div>
@@ -38,8 +34,8 @@
                         <div class="card-footer text-muted d-flex justify-content-start align-items-center p-3">
                             <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3-bg.webp"
                                  alt="avatar 3" style="width: 40px; height: 100%;">
-                        <textarea type="text" class="" id="message"
-                                      placeholder="Type message" name="Content"></textarea>
+                        <textarea type="text" class="" id="Message"
+                                      placeholder="Ваше сообщение" name="Content" required spellcheck="true"></textarea>
                             <a class="ms-1 text-muted" href="#!"><i class="fas fa-paperclip"></i></a>
                             <a class="ms-3 text-muted" href="#!"><i class="fas fa-smile"></i></a>
                             <a id="sendBtn" title="send" class="primary btn expanded" type="submit">Отправить</a>
@@ -55,7 +51,7 @@
     <input type="hidden" id="Id" name="Id" value="@Model.Id">
     <input type="hidden" id="DateCreated" name="DateCreated" value="@Model.DateCreated">
     <input type="hidden" id="DateUpdated" name="DateUpdated" value="@Model.DateUpdated">
-    <input id="userName" type="hidden" value="@User.Identity.Name"/>
+    <input id="UserName" type="hidden" value="@User.Identity.Name"/>
     <br/>
     <br/>
 </form>
@@ -68,27 +64,29 @@
         $(document).on("click",
             "#sendBtn",
             () => {
-                $.ajax({
-                    type: "POST",
-                    url: '@Url.Action("Message")',
-                    data: {
-                        message: JSON.stringify($('#editForm').serializeToJSON({}))
-                    },
-                    success: function() {
-                        console.log("success");
-                    },
-                    error: function() {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Упс, произошла ошибка!',
-                            showConfirmButton: false,
-                            timer: 1500
+                    if ($("#Message").val() != '') {
+                        $.ajax({
+                            type: "POST",
+                            url: '@Url.Action("Message")',
+                            data: {
+                                message: JSON.stringify($('#editForm').serializeToJSON({}))
+                            },
+                            success: function () {
+                                console.log("success");
+                            },
+                            error: function () {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Упс, произошла ошибка!',
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                });
+                            }
                         });
-                    }
-                });
+                    }   
             }
         );
-        });
+    });
     </script>
     <script>
         var hubConnection = new signalR.HubConnectionBuilder()
@@ -97,12 +95,14 @@
 
         document.getElementById("sendBtn").addEventListener("click",
             function() {
-                const userName = document.getElementById("userName").value;
-                const message = document.getElementById("message").value;
-                hubConnection.invoke("Send", message, userName)
-                    .catch(function(err) {
-                        return console.error(err.toString());
-                    });
+                if ($("#Message").val() != '') {
+                    const userName = document.getElementById("UserName").value;
+                    const message = document.getElementById("Message").value;
+                    hubConnection.invoke("Send", message, userName)
+                        .catch(function (err) {
+                            return console.error(err.toString());
+                        });
+                }
             });
 
         hubConnection.on("Receive",

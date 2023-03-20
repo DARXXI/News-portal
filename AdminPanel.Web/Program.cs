@@ -3,22 +3,10 @@ using AdminPanel.Repository;
 using AdminPanel.Repository.Repositories;
 using AdminPanel.Repository.Repositories.Interfaces;
 using AdminPanel.Web.Services;
-using AdminPanel.Web;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Connections;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.DotNet.Scaffolding.Shared.ProjectModel;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Npgsql;
-using Microsoft.AspNetCore.Rewrite;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options; 
 using AdminPanel.Web.hubs;
-using Microsoft.AspNetCore.Http.Connections;
-using Telegram.Bot;
+using AdminPanel.TelegramBot;
 
 var builder = WebApplication.CreateBuilder(args);
 

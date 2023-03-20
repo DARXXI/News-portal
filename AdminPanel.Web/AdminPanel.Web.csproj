@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AdminPanel.Repository\AdminPanel.Repository.csproj" />
+    <ProjectReference Include="..\AdminPanel.TelegramBot\AdminPanel.TelegramBot.csproj" />
   </ItemGroup>
 
   <ItemGroup>
