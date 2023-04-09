@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Telegram.Bot;
 using AdminPanel.TelegramBot;
+using Polly;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace AdminPanel.Web.Controllers
 {
@@ -36,8 +39,15 @@ namespace AdminPanel.Web.Controllers
             {
                 await _chatRepository.UpdateAsync(message, UserId, cancellationToken);
 
+                //TODO 
                 var mes = _chatRepository.GetAllMessages().Last();
-                await AdminPanel.TelegramBot.TelegramBot.SendMessageAsync(cancellationToken, mes);
+                var chatId = (long)_userRepository.FindOrCreate(UserId).ChatId;
+
+
+                if (chatId != null)
+                {
+                    await AdminPanel.TelegramBot.TelegramBot.SendMessageAsync(cancellationToken, mes, chatId);
+                }
             }
             return Ok();
         }

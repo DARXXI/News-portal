@@ -6,15 +6,13 @@ using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bots.Http;
 using System;
-
+using AdminPanel.Repository.Repositories;
 
 namespace AdminPanel.TelegramBot
 {
     public class TelegramBot
     {
         public static TelegramBotClient bot = new TelegramBotClient("6072159438:AAHpHgZdUrtsk9tnWLHEBhT7W6jYKsew6Mc");
-        //TODO массив
-        public static long ChatId { get; set; }
         public CancellationTokenSource cts = new();
 
         ReceiverOptions receiverOptions = new ReceiverOptions
@@ -22,17 +20,30 @@ namespace AdminPanel.TelegramBot
             AllowedUpdates = Array.Empty<UpdateType>()
         };
 
-        //TODO получение ChatId
-        public static async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
+        //TODO
+        //public void Dispose()
+        //{
+        //    SendMessageAsync(() => new CancellationToken(), t => new AdminPanel.Domain.Entities.Message() { Content = "Connection lost!"},  );
+        //}
+        //TODO установка ChatId, текущему пользователю
+        public async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
         {
             System.Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(update));
             var message = update.Message;
-            ChatId = message.Chat.Id;
+
+            if (message.Text != null)
+            {
+                Message mes = await bot.SendTextMessageAsync(
+                chatId: message.Chat.Id,
+                text: "you wrote" + message.Text,
+                cancellationToken: cancellationToken);
+            }
+            //_userRepository.FindOrCreate()
             if (message.Text == "/start")
             {
                 Message mes = await bot.SendTextMessageAsync(
-                chatId: ChatId,
-                text: "You said:\n" + message.Text,
+                chatId: message.Chat.Id,
+                text: "Connection Established!",
                 cancellationToken: cancellationToken);
             }
         }
@@ -48,10 +59,11 @@ namespace AdminPanel.TelegramBot
             System.Console.WriteLine(ErrorMessage);
             return Task.CompletedTask;
         }
-        public static async Task SendMessageAsync(CancellationToken cancellationToken, AdminPanel.Domain.Entities.Message message)
+
+        public static async Task SendMessageAsync(CancellationToken cancellationToken, AdminPanel.Domain.Entities.Message message, long chatId)
         {
             Message mes = await bot.SendTextMessageAsync(
-            chatId: ChatId,
+            chatId: chatId,
             text: message.Content,
             cancellationToken: cancellationToken);
         }

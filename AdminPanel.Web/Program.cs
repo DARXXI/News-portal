@@ -25,14 +25,9 @@ builder.Services.AddScoped<INewsRepository, NewsRepository>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<IImageRepository, ImageRepository>();
 builder.Services.AddScoped<IImageService, ImageService>();
-//TODO
-//builder.Services.AddSingleton<ITelegramBotClient, TelegramBotClient>();
-
 builder.Services.AddTransient<IChatRepository<Message>, ChatRepository>();
 
-builder.Services.AddResponseCaching();
-
-
+//TODO
 TelegramBot telegramBot = new();
 telegramBot.RunAsync();
 
@@ -43,6 +38,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.LoginPath = "/account/login";
         options.AccessDeniedPath = "/accessdenied";
     });
+
 
 
 var app = builder.Build();

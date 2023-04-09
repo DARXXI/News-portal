@@ -151,7 +151,8 @@ namespace AdminPanel.Repository.Migrations
                     RoleId = table.Column<int>(type: "integer", nullable: true),
                     ProjectsId = table.Column<List<int>>(type: "integer[]", nullable: true),
                     ImageId = table.Column<int>(type: "integer", nullable: false),
-                    Messages = table.Column<ICollection<Message>>(type: "json", nullable: true)
+                    Messages = table.Column<ICollection<Message>>(type: "json", nullable: true),
+                    ChatId = table.Column<long>(type: "bigint", nullable: true)
                 },
                 constraints: table =>
                 {

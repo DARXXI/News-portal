@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdminPanel.Web", "AdminPane
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdminPanel.TelegramBot", "AdminPanel.TelegramBot\AdminPanel.TelegramBot.csproj", "{B6BA2C53-9D89-42C5-A8D7-9DD55E1271EC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Teleg", "Teleg\Teleg.csproj", "{1CB11864-B95E-4E5E-BE07-B33D0569A8F7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{B6BA2C53-9D89-42C5-A8D7-9DD55E1271EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B6BA2C53-9D89-42C5-A8D7-9DD55E1271EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B6BA2C53-9D89-42C5-A8D7-9DD55E1271EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1CB11864-B95E-4E5E-BE07-B33D0569A8F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1CB11864-B95E-4E5E-BE07-B33D0569A8F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1CB11864-B95E-4E5E-BE07-B33D0569A8F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1CB11864-B95E-4E5E-BE07-B33D0569A8F7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

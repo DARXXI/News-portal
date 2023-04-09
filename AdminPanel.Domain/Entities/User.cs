@@ -44,5 +44,8 @@ namespace AdminPanel.Domain.Entities
         [Column(TypeName = "json")]
         public ICollection<Message>? Messages { get; set; } = new List<Message>();
 
+
+        [JsonIgnore]
+        public long? ChatId { get; set; }
     }
 }

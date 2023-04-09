@@ -14,7 +14,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace AdminPanel.Repository.Migrations
 {
     [DbContext(typeof(DataBaseContext))]
-    [Migration("20230308103844_InitialMigration")]
+    [Migration("20230321230814_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -288,6 +288,9 @@ namespace AdminPanel.Repository.Migrations
                     b.Property<int?>("Age")
                         .HasColumnType("int")
                         .HasColumnName("Age");
+
+                    b.Property<long?>("ChatId")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("City")
                         .HasMaxLength(100)

@@ -286,6 +286,9 @@ namespace AdminPanel.Repository.Migrations
                         .HasColumnType("int")
                         .HasColumnName("Age");
 
+                    b.Property<long?>("ChatId")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("City")
                         .HasMaxLength(100)
                         .HasColumnType("varchar")

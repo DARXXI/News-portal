@@ -48,6 +48,9 @@
             <div class="floated-label-wrapper">
                 <input type="text" id="inputNote" name="Note" value="@Model.Note" placeholder="Заметки">
             </div>
+            <div class="floated-label-wrapper">
+                <div><input type="text" name="ChatId" placeholder="Id телеграмм чата" value="@Model.ChatId"></div>
+            </div>
             </div>
                 <input type="hidden"  id="Id" name="Id" value="@Model.Id">
                 <input type="hidden"  id="DateCreated" name="DateCreated" value="@Model.DateCreated">
@@ -176,5 +179,4 @@
                     });
                 });
     </script>
-    <script type="text/javascript">AdminPanel.Authentication()</script>
 }
