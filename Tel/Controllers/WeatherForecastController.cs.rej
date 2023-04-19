@@ -1,9 +1,0 @@
-diff a/Tel/Controllers/WeatherForecastController.cs b/Tel/Controllers/WeatherForecastController.cs	(rejected hunks)
-@@ -0,6 +0,7 @@
- 
-         private readonly ILogger<WeatherForecastController> _logger;
- 
-+        public WeatherForecastController(ILogger<WeatherForecastController> logger)
-         {
-             _logger = logger;
-         }
