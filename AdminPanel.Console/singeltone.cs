@@ -1,5 +1,0 @@
-﻿namespace AdminPanel.Console
-{
-    
-    
-}
